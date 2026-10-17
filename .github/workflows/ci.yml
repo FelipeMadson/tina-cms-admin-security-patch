@@ -1,0 +1,17 @@
+name: CI Verification
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm --prefix frontend ci --ignore-scripts
+      - run: npm --prefix frontend test
+      - run: npm --prefix frontend run build
