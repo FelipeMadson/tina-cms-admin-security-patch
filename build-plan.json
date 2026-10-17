@@ -1,0 +1,76 @@
+{
+  "plan": {
+    "slug": "tina-cms-admin-security-patch",
+    "kind": "angular-application",
+    "architecture": "middleware-sanitization-guard-iframe-sandbox-csp-strict-origin",
+    "visual": {
+      "audience": "engenheiros de segurança e mantenedores de aplicações",
+      "primaryTask": "validar origem iframe de preview admin",
+      "compositions": [
+        "iframe-sandboxed-preview-iframe-validation",
+        "security-patch-validation-dashboard-iframe"
+      ],
+      "selectionReason": "composições específicas ao domínio de segurança e validação de iframe, sem decoração repetitiva",
+      "screens": [
+        "iframe-sandboxed-preview-iframe-validation",
+        "security-patch-validation-dashboard-iframe"
+      ]
+    },
+    "features": [
+      {
+        "name": "Validação de origem iframe",
+        "acceptance": [
+          "A rota de fragmento /~/* rejeita qualquer URL com protocolo relativo ou origem arbitrária.",
+          "Testes automatizados cobrem injeções com barras duplas e parâmetros codificados."
+        ],
+        "files": [
+          "frontend/src/app/iframe-validation.guard.ts",
+          "frontend/src/app/iframe-validation.component.ts",
+          "frontend/src/app/iframe-validation.module.ts"
+        ]
+      },
+      {
+        "name": "Sanitização de fragmento URL",
+        "acceptance": [
+          "Sanitização de fragmento URL com regex de origem permitida e validação de protocolo.",
+          "Fragmento URL é processado antes de ser injetado no iframe."
+        ],
+        "files": [
+          "frontend/src/app/fragment-sanitizer.service.ts",
+          "frontend/src/app/fragment-sanitizer.pipe.ts"
+        ]
+      },
+      {
+        "name": "Sandbox iframe com CSP",
+        "acceptance": [
+          "Atributos sandbox e CSP são injetados no iframe para isolar o conteúdo.",
+          "CSP define origem permitida como 'strict-origin'."
+        ],
+        "files": [
+          "frontend/src/app/iframe-sandbox.directive.ts",
+          "frontend/src/app/iframe-sandbox.component.ts"
+        ]
+      },
+      {
+        "name": "Dashboard de validação de segurança",
+        "acceptance": [
+          "Dashboard exibe status de validação de iframe e origem.",
+          "Testes automatizados são exibidos com resultados de sucesso ou falha."
+        ],
+        "files": [
+          "frontend/src/app/security-dashboard.component.ts",
+          "frontend/src/app/security-dashboard.module.ts"
+        ]
+      }
+    ],
+    "limitations": [
+      "Compatibilidade com visualizações legítimas em múltiplos domínios configurados explicitamente.",
+      "Não há suporte para origens externas com protocolo relativo ou origem arbitrária.",
+      "Testes automatizados cobrem injeções com barras duplas e parâmetros codificados, mas não cobrem todas as possibilidades."
+    ]
+  },
+  "approvedCriteria": [
+    "A rota de fragmento /~/* rejeita qualquer URL com protocolo relativo ou origem arbitrária.",
+    "Testes automatizados cobrem injeções com barras duplas e parâmetros codificados."
+  ]
+}
